@@ -1,5 +1,6 @@
-import chrome.Impl._
-import chrome.permissions.APIPermission._
+import chrome._
+import chrome.permissions.Permission
+import chrome.permissions.Permission.API
 import net.lullabyte.{Chrome, ChromeSbtPlugin}
 
 lazy val root = project.in(file("."))
@@ -21,19 +22,20 @@ lazy val root = project.in(file("."))
     relativeSourceMaps := true,
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.0",
-      "net.lullabyte" %%% "scala-js-chrome" % "0.2.0"
+      "net.lullabyte" %%% "scala-js-chrome" % "0.3.0"
     ),
-    chromeManifest := AppManifest(
-      name = name.value,
-      version = version.value,
-      app = App(
-        background = Background(
-          scripts = List("main.js")
-        )
-      ),
-      permissions = Set(
-        Tabs
+    chromeManifest := new ExtensionManifest {
+      val name = Keys.name.value
+      val version = Keys.version.value
+      val background = Background(
+        scripts = Chrome.defaultScripts
       )
-    )
+      override val permissions: Set[Permission] = Set(
+        API.Tabs
+      )
+      override val browserAction = Some(BrowserAction(
+        title = Some("Save"),
+        popup = Some("assets/html/App.html")
+      ))
+    }
   )
-
