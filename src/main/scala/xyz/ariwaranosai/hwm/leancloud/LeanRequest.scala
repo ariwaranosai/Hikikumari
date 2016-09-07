@@ -12,14 +12,12 @@ import xyz.ariwaranosai.hwm._
   */
 
 abstract class LeanRequest {
-  // ---------- design -------------- //
+  val requestUrl: Url
+  val method: Method
+  val data: String
 
-  val requestUrl: Url //需要拼装
-  val requestType: Method //指定
-  val data: String // 注入，dsl
+  val requestHeaderBuilder: RequestHeaderBuilder
 
-  val requestHeaderBuilder: Map[String, String] //需要拼装
-
-  def run(url: Url, method: Method, data: String, headers: RequestHeader) :Future[XMLHttpRequest] =
-    Ajax(method.cmd, url, data, headers = headers, timeout = 0, withCredentials = false, responseType = "")
+  def run() :Future[XMLHttpRequest] =
+    Ajax(method.cmd, requestUrl, data, headers = requestHeaderBuilder.build(), timeout = 0, withCredentials = false, responseType = "")
 }

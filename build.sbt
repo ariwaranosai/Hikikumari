@@ -24,7 +24,12 @@ lazy val root = project.in(file("."))
     libraryDependencies ++= Seq(
       "org.scala-js" %%% "scalajs-dom" % "0.9.0",
       "net.lullabyte" %%% "scala-js-chrome" % "0.3.0",
-      "com.thoughtworks.binding" %%% "dom" % "latest.release"
+      "com.thoughtworks.binding" %%% "dom" % "latest.release",
+      "xyz.ariwaranosai" %%% "scalajs-hashes" % "0.0.1-SNAPSHOT",
+      "org.scalatest" %%% "scalatest" % "3.0.0" % "test"
+    ),
+    jsDependencies ++= Seq(
+      "org.webjars.bower" % "jshashes" % "1.0.5" / "1.0.5/hashes.min.js"
     ),
     chromeManifest := new ExtensionManifest {
       val name = Keys.name.value
