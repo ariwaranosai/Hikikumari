@@ -1,4 +1,4 @@
-package xyz.ariwaranosai.hwm.leancloud
+package xyz.ariwaranosai.leancloud
 
 /**
   * Created by sai on 2016/9/7.

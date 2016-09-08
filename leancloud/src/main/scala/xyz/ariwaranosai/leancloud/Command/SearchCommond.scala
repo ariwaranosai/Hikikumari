@@ -1,6 +1,7 @@
-package xyz.ariwaranosai.hwm.leancloud.LeanRequest.Command
+package xyz.ariwaranosai.leancloud.Command
 
-import xyz.ariwaranosai.hwm.leancloud.LeanRequest.LeanRequest
+import xyz.ariwaranosai.leancloud.LeanRequest
+
 
 /**
   * Created by sai on 2016/9/7.

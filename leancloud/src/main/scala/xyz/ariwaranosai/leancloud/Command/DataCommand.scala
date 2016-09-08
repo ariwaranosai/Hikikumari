@@ -1,12 +1,8 @@
-package xyz.ariwaranosai.hwm.leancloud.LeanRequest.Command
+package xyz.ariwaranosai.leancloud.Command
 
-import xyz.ariwaranosai.hwm.RequestMethod
-import xyz.ariwaranosai.hwm.RequestMethod.GET
-import xyz.ariwaranosai.hwm.leancloud.LeanRequest.LeanRequest
-import xyz.ariwaranosai.hwm.leancloud.{Method, Url}
+import xyz.ariwaranosai.leancloud.LeanRequest
 
 import scala.concurrent.Future
-import scala.util.Try
 
 /**
   * Created by sai on 2016/9/7.

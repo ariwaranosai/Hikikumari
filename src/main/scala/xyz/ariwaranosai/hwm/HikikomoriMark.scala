@@ -8,8 +8,8 @@ import org.scalajs.dom.html.{Button, Div}
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js.JSApp
 import io.circe.generic.auto._
-import io.circe.parser._
 import io.circe.syntax._
+import xyz.ariwaranosai.leancloud.LeanRequest.ObjectCreateRequest
 
 import scala.util.{Failure, Success}
 
@@ -19,14 +19,15 @@ import scala.util.{Failure, Success}
   *
   */
 
-import leancloud.LeanRequest.LeanRequest.ObjectCreateRequest
 
 object Data {
   case class kancolle(name: String, id: Int)
   val data = kancolle("haruna", 151).asJson.noSpaces
 }
 
-object HikikomoriMark extends JSApp {
+object HikikomoriMark extends {
+} with JSApp {
+
   @dom
   def clickButton: Binding[Div] = {
     <div>

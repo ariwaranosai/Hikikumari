@@ -1,7 +1,6 @@
-package xyz.ariwaranosai.hwm.leancloud.LeanRequest
+package xyz.ariwaranosai.leancloud
 
 import xyz.ariwaranosai.hashes.Implicit.MD5Ops
-import xyz.ariwaranosai.hwm.leancloud.{Config, _}
 
 /**
   * Created by ariwaranosai on 16/9/6.

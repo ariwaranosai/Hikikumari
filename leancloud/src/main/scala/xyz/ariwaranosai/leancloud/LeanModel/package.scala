@@ -1,4 +1,5 @@
-package xyz.ariwaranosai.hwm.leancloud
+package xyz.ariwaranosai.leancloud
+
 
 import io.circe.generic.auto._
 import io.circe.parser._

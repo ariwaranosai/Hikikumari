@@ -1,16 +1,9 @@
-package xyz.ariwaranosai.hwm.leancloud.LeanRequest
+package xyz.ariwaranosai.leancloud
 
 import org.scalajs.dom.ext.Ajax
-import xyz.ariwaranosai.hwm.RequestMethod
-import xyz.ariwaranosai.hwm.RequestMethod.POST
-import xyz.ariwaranosai.hwm.leancloud.LeanModel.{CreateResponse, LeanResponse}
-import xyz.ariwaranosai.hwm.leancloud.LeanRequest.CClass.ObjectRequest
-import xyz.ariwaranosai.hwm.leancloud.LeanRequest.Command.DataChangeCommand
-import xyz.ariwaranosai.hwm.leancloud._
 
-import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.concurrent.Future
-import scala.util.{Failure, Success, Try}
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 /**
   * Created by ariwaranosai on 16/9/6.
@@ -45,10 +38,15 @@ trait TrivalRequest extends LeanRequest {
 
 
 object LeanRequest {
+  import xyz.ariwaranosai.leancloud.Command._
+  import xyz.ariwaranosai.leancloud.LeanModel._
+  import xyz.ariwaranosai.leancloud.RequestMethod._
+  import xyz.ariwaranosai.leancloud.CClass._
+  import xyz.ariwaranosai.leancloud.LeanModel.LeanModelImplicit._
+
   class ObjectCreateRequest(className: String)
     extends DataChangeCommand[CreateResponse](className, "")
       with ObjectRequest with RequestHeaderBuilder {
-    import LeanModel.LeanModelImplicit._
     override val method: Method = POST
 
     override def string2T(s: String): Future[CreateResponse] = createResponse(s)

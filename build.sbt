@@ -3,46 +3,43 @@ import chrome.permissions.Permission
 import chrome.permissions.Permission.API
 import net.lullabyte.{Chrome, ChromeSbtPlugin}
 
+name := "hwm"
+
 val circeVersion = "0.4.1"
 
-lazy val root = project.in(file("."))
+lazy val commonSettings = Seq (
+  version := "0.0.1",
+  scalaVersion := "2.11.8",
+  scalacOptions ++= Seq(
+    "-language:implicitConversions",
+    "-language:existentials",
+    "-Xlint",
+    "-deprecation",
+    "-Xfatal-warnings",
+    "-feature",
+    "-language:postfixOps"
+  ),
+  persistLauncher := true,
+  persistLauncher in Test := false,
+  libraryDependencies ++= Seq(
+    "org.scala-js" %%% "scalajs-dom" % "0.9.0",
+    "com.lihaoyi" %%% "utest" % "0.4.3" % "test",
+    "io.circe" %%% "circe-core" % circeVersion,
+    "io.circe" %%% "circe-generic" % circeVersion,
+    "io.circe" %%% "circe-parser" % circeVersion
+  ),
+  testFrameworks += new TestFramework("utest.runner.Framework"),
+  relativeSourceMaps := true
+)
+
+lazy val root = (project in file("."))
+  .settings(commonSettings:_*)
   .enablePlugins(ChromeSbtPlugin)
   .enablePlugins(ScalaJSPlugin)
   .settings(
-    name := "hwm",
-    version := "0.0.1",
-    scalaVersion := "2.11.8",
-    scalacOptions ++= Seq(
-      "-language:implicitConversions",
-      "-language:existentials",
-      "-Xlint",
-      "-deprecation",
-      "-Xfatal-warnings",
-      "-feature"
-    ),
-    javacOptions ++= Seq (
-      "-Xms12288M",
-      "-Xmx12288M",
-      "-XX:NewSize=3072M",
-      "-XX:MaxNewSize=3072M",
-      "-XX:ParallelGCThreads=8"
-    ),
-    persistLauncher := true,
-    persistLauncher in Test := false,
-    relativeSourceMaps := true,
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % "0.9.0",
       "net.lullabyte" %%% "scala-js-chrome" % "0.3.0",
-      "com.lihaoyi" %%% "utest" % "0.4.3" % "test",
-      "com.thoughtworks.binding" %%% "dom" % "latest.release",
-      "xyz.ariwaranosai" %%% "scalajs-hashes" % "0.0.1-SNAPSHOT",
-      "io.circe" %%% "circe-core" % circeVersion,
-      "io.circe" %%% "circe-generic" % circeVersion,
-      "io.circe" %%% "circe-parser" % circeVersion
-    ),
-    testFrameworks += new TestFramework("utest.runner.Framework"),
-    jsDependencies ++= Seq(
-      "org.webjars.bower" % "jshashes" % "1.0.5" / "1.0.5/hashes.min.js"
+      "com.thoughtworks.binding" %%% "dom" % "latest.release"
     ),
     chromeManifest := new ExtensionManifest {
       val name = Keys.name.value
@@ -58,7 +55,18 @@ lazy val root = project.in(file("."))
         popup = Some("assets/html/App.html")
       ))
     }
+  ).dependsOn(leancloud)
+
+lazy val leancloud = (project in file("leancloud"))
+  .settings(commonSettings:_*)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(
+    libraryDependencies ++= Seq(
+      "xyz.ariwaranosai" %%% "scalajs-hashes" % "0.0.2"
+    ),
+    jsDependencies ++= Seq(
+      "org.webjars.bower" % "jshashes" % "1.0.5" / "1.0.5/hashes.min.js"
+    )
   )
 
 addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
-

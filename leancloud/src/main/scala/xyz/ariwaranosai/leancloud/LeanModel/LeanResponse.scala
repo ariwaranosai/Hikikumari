@@ -1,9 +1,10 @@
-package xyz.ariwaranosai.hwm.leancloud.LeanModel
+package xyz.ariwaranosai.leancloud.LeanModel
 
-import xyz.ariwaranosai.hwm.leancloud.{LeanException, LeanInternalException}
+import xyz.ariwaranosai.leancloud.LeanInternalException
 
 /**
-  * Created by sai on 2016/9/7.
+  * Created by ariwaranosai on 16/9/8.
+  *
   */
 
 case class LeanResponse(code: Int, error: String) {
