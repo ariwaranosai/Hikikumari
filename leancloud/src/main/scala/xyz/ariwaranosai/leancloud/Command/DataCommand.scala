@@ -1,6 +1,6 @@
 package xyz.ariwaranosai.leancloud.Command
 
-import xyz.ariwaranosai.leancloud.LeanRequest
+import xyz.ariwaranosai.leancloud._
 
 import scala.concurrent.Future
 
@@ -9,10 +9,10 @@ import scala.concurrent.Future
   */
 
 abstract class DataCommand(name: String, data: String) extends LeanRequest {
-  override def commond: String = if(data.length > 0) s"$name/" else s"$name/$data"
+  override def command: String = if(data.isEmpty) s"$name/" else s"$name/$data"
 }
 
 abstract class DataChangeCommand[T](name: String, data: String) extends DataCommand(name, data) {
-  def string2T(s: String): Future[T]
-  def run(data: String): Future[T] = super.run[T](data)(string2T)
+  implicit def string2T(s: String): Future[T]
+  def run(data: String): Future[T] = run[T](data)
 }

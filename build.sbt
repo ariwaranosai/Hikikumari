@@ -19,8 +19,6 @@ lazy val commonSettings = Seq (
     "-feature",
     "-language:postfixOps"
   ),
-  persistLauncher := true,
-  persistLauncher in Test := false,
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.9.0",
     "com.lihaoyi" %%% "utest" % "0.4.3" % "test",
@@ -41,6 +39,7 @@ lazy val root = (project in file("."))
       "net.lullabyte" %%% "scala-js-chrome" % "0.3.0",
       "com.thoughtworks.binding" %%% "dom" % "latest.release"
     ),
+    addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
     chromeManifest := new ExtensionManifest {
       val name = Keys.name.value
       val version = Keys.version.value
@@ -65,8 +64,8 @@ lazy val leancloud = (project in file("leancloud"))
       "xyz.ariwaranosai" %%% "scalajs-hashes" % "0.0.2"
     ),
     jsDependencies ++= Seq(
+      RuntimeDOM,
       "org.webjars.bower" % "jshashes" % "1.0.5" / "1.0.5/hashes.min.js"
     )
   )
 
-addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)

@@ -9,11 +9,11 @@ import utest._
 
 object RequestHeaderBuilderTest extends TestSuite {
 
-  object TrivalBuilder extends TrivalRequest with RequestHeaderBuilder
-
-  object HashBuilder extends TrivalRequest with SignHeaderBuilder
 
   val tests = this{
+    object TrivalBuilder extends TrivalRequest with RequestHeaderBuilder
+    object HashBuilder extends TrivalRequest with SignHeaderBuilder
+
     'TrivalBuilder{
       assert(TrivalBuilder.buildRequestHeaders() == Map[String, String](
         "X-LC-Id" -> Config.APP_ID,

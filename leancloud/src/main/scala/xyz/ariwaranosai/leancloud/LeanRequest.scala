@@ -13,10 +13,10 @@ import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 abstract class LeanRequest {
 
   def requestUrl: Url = {
-    s"$API_URL/${API_VERSION.toString}/$cclass/$commond".stripSuffix("/")
+    s"$API_URL/${API_VERSION.toString}/$cclass/$command".stripSuffix("/")
   }
 
-  def commond: String = ""
+  def command: String = ""
   def cclass: String = ""
 
   val method: Method
@@ -48,8 +48,7 @@ object LeanRequest {
     extends DataChangeCommand[CreateResponse](className, "")
       with ObjectRequest with RequestHeaderBuilder {
     override val method: Method = POST
-
-    override def string2T(s: String): Future[CreateResponse] = createResponse(s)
+    override implicit def string2T(s: String): Future[CreateResponse] = createResponse(s)
   }
 
   object ObjectCreateRequest {
