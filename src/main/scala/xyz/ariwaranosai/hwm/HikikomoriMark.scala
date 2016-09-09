@@ -7,10 +7,15 @@ import org.scalajs.dom.html.{Button, Div}
 
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js.JSApp
+import xyz.ariwaranosai.leancloud.LeanRequest.{ObjectCreateRequest, ObjectGetRequest}
+import io.circe._
+import io.circe.generic.JsonCodec
 import io.circe.generic.auto._
+import io.circe.parser._
 import io.circe.syntax._
-import xyz.ariwaranosai.leancloud.LeanRequest.ObjectCreateRequest
+import xyz.ariwaranosai.leancloud.LeanJsonParserException
 
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 
@@ -20,24 +25,29 @@ import scala.util.{Failure, Success}
   */
 
 
-object Data {
-  case class kancolle(name: String, id: Int)
-  val data = kancolle("haruna", 151).asJson.noSpaces
-}
 
-object HikikomoriMark extends {
-} with JSApp {
+object HikikomoriMark extends JSApp {
+  @JsonCodec case class kancolle(name: String, id: Int)
+  val data = kancolle("haruna", 151).asJson.noSpaces
 
   @dom
   def clickButton: Binding[Div] = {
     <div>
     <button onclick={event: Event =>
-      ObjectCreateRequest("kancolle").run(Data.data)
+    ObjectCreateRequest("kancolle")
+      .run(data)
       .onComplete {
         case Success(x) => println(x.objectId)
         case Failure(x) => println(x.toString)
       }
-    }>click</button></div>
+
+      ObjectGetRequest("kancolle", "57d199c4816dfa00543027f9")
+          .get[kancolle]("").onComplete {
+            case Success(x) => println(x.name)
+            case Failure(x) => println(x.asInstanceOf[LeanJsonParserException].origin)
+          }
+    }>click</button>
+    </div>
   }
 
   override def main(): Unit = {

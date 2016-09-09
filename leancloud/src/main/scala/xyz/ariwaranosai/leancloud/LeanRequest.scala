@@ -1,9 +1,12 @@
 package xyz.ariwaranosai.leancloud
 
+import cats.data.Xor.{Left, Right}
+import io.circe.parser._
 import org.scalajs.dom.ext.Ajax
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
+import io.circe.{Decoder, Error}
 
 /**
   * Created by ariwaranosai on 16/9/6.
@@ -29,6 +32,18 @@ abstract class LeanRequest {
       timeout = 0, withCredentials = false, responseType = "")
         .flatMap(x => f(x.responseText))
   }
+
+  def get[T](data: String)(implicit decoder: Decoder[T]) :Future[T] = {
+    Ajax(method.cmd, requestUrl, data,
+      headers = buildRequestHeaders(),
+      timeout = 0, withCredentials = false, responseType = "")
+        .flatMap(rep => Future {
+          parse(rep.responseText).flatMap(decoder.decodeJson) match {
+            case Right(x) => x
+            case Left(x) => throw LeanJsonParserException(rep.responseText, x.toString)
+          }
+        })
+  }
 }
 
 trait TrivalRequest extends LeanRequest {
@@ -53,5 +68,15 @@ object LeanRequest {
 
   object ObjectCreateRequest {
     def apply(className: String): ObjectCreateRequest = new ObjectCreateRequest(className)
+  }
+
+  class ObjectGetRequest(className: String, objectId: String)
+    extends DataCommand(className, objectId)
+      with ObjectRequest with RequestHeaderBuilder {
+    override val method: Method = GET
+  }
+
+  object ObjectGetRequest {
+    def apply(className: String, objectId: String): ObjectGetRequest = new ObjectGetRequest(className, objectId)
   }
 }

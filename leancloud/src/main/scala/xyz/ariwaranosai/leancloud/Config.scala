@@ -5,6 +5,6 @@ package xyz.ariwaranosai.leancloud
   */
 
 object Config {
-  var APP_ID = "XXXXXXXXXXXXXXXXXXXXXXXX"
-  var APP_KEY = "OOOOOOOOOOOOOOOOOOOOOOOO"
+  var APP_ID = "9MlS0wWbed5v4KPBE5ilsmLK-gzGzoHsz"
+  var APP_KEY = "6wioifHglQYGbSpgyiRyLf3w"
 }
