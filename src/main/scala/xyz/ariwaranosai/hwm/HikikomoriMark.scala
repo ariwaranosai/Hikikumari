@@ -1,3 +1,8 @@
+/**
+  * Created by ariwaranosai on 16/9/5.
+  *
+  */
+
 package xyz.ariwaranosai.hwm
 
 import chrome.tabs.bindings.TabQuery
@@ -18,11 +23,6 @@ import xyz.ariwaranosai.leancloud.LeanJsonParserException
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-
-/**
-  * Created by ariwaranosai on 16/9/5.
-  *
-  */
 
 
 

@@ -54,14 +54,14 @@ lazy val root = (project in file("."))
         popup = Some("assets/html/App.html")
       ))
     }
-  ).dependsOn(leancloud)
+  ).aggregate(leancloud).dependsOn(leancloud)
 
 lazy val leancloud = (project in file("leancloud"))
   .settings(commonSettings:_*)
   .enablePlugins(ScalaJSPlugin)
   .settings(
     libraryDependencies ++= Seq(
-      "xyz.ariwaranosai" %%% "scalajs-hashes" % "0.0.2"
+      "xyz.ariwaranosai" %%% "scalajs-hashes" % "0.1.0"
     ),
     jsDependencies ++= Seq(
       RuntimeDOM,

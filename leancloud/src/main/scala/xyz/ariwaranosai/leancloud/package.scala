@@ -1,13 +1,14 @@
+/**
+  * '''leancloud''': Leancloud RESTful api binding for scalajs in static-type.
+  *
+  * This package, [[xyz.ariwaranosai.leancloud]], contains:
+  *  - request class for data CRUD in leancloud.
+  *  - class for build-in type for json object returned by leancloud.
+  *  - related exception
+  */
+
 package xyz.ariwaranosai
 
-/**
-  * Created by ariwaranosai on 16/9/8.
-  *
-  */
-
-/**
-  * Created by sai on 2016/9/5.
-  */
 package object leancloud {
   val API_URL = "https://api.leancloud.cn"
   val API_VERSION = 1.1
