@@ -24,7 +24,7 @@ object RequestHeaderBuilderTest extends TestSuite {
     'HashBuilder{
       val header = HashBuilder.buildRequestHeaders()
       val signAndTime = header("X-LC-Sign").split(",")
-      val newSign = (signAndTime(1) + Config.APP_KEY).MD5().hex()
+      val newSign = (signAndTime(1) + Config.APP_KEY).MD5().hex
 
       assert(signAndTime(0) == newSign)
     }

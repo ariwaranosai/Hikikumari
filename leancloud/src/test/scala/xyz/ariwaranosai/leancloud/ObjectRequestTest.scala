@@ -6,8 +6,10 @@ import io.circe.parser._
 import io.circe.syntax._
 import LeanRequest.{ObjectCreateRequest, ObjectGetRequest}
 import io.circe.generic.JsonCodec
+import xyz.ariwaranosai.leancloud.LeanModel.CreateResponse
 import xyz.ariwaranosai.leancloud.RequestMethod.POST
 
+import scala.concurrent.Future
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.concurrent.duration._
 import scala.util.{Failure, Success}
@@ -17,12 +19,14 @@ import scala.util.{Failure, Success}
   */
 
 object ObjectRequestTest extends TestSuite {
+
   @JsonCodec case class kancolle(name: String, id: Int)
+
   val data = kancolle("Murasame", 81).asJson.noSpaces
 
-  val tests = this{
+  val tests = this {
 
-    'ObjectCreateRequestUrl{
+    'ObjectCreateRequestUrl {
       val request = ObjectCreateRequest("kancolle")
       assert(request.method == POST)
       assert(request.requestUrl == "https://api.leancloud.cn/1.1/classes/kancolle")
@@ -36,7 +40,7 @@ object ObjectRequestTest extends TestSuite {
         }
     }
 
-    'ObjectGetRequestUrl{
+    'ObjectGetRequestUrl {
       val request = ObjectGetRequest("kancolle", "57d199c4816dfa00543027f9")
       assert(request.requestUrl == "https://api.leancloud.cn/1.1/classes/kancolle/57d199c4816dfa00543027f9")
     }
@@ -48,5 +52,7 @@ object ObjectRequestTest extends TestSuite {
         case Failure(x) => println(x.asInstanceOf[LeanJsonParserException].origin)
       }
     }
+
   }
+
 }
