@@ -3,8 +3,8 @@ package xyz.ariwaranosai.leancloud.CClass
 import xyz.ariwaranosai.leancloud.LeanRequest
 
 
-/**
-  * Created by sai on 2016/9/7.
+/** Request about control Object store in leancloud.
+  *
   */
 
 trait ObjectRequest extends LeanRequest {

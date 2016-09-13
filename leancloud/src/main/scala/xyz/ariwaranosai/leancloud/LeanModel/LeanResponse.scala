@@ -3,8 +3,7 @@ package xyz.ariwaranosai.leancloud.LeanModel
 import xyz.ariwaranosai.leancloud.LeanInternalException
 
 /**
-  * Created by ariwaranosai on 16/9/8.
-  *
+  * Error message model.
   */
 
 case class LeanResponse(code: Int, error: String) {

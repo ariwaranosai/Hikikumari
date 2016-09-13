@@ -1,7 +1,7 @@
 package xyz.ariwaranosai.leancloud
 
 /**
-  * Created by sai on 2016/9/7.
+  * LeanException
   */
 
 abstract class LeanException extends Exception

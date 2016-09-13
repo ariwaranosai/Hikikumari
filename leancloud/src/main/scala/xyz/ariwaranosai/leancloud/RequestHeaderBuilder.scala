@@ -3,10 +3,8 @@ package xyz.ariwaranosai.leancloud
 import xyz.ariwaranosai.hashes.Implicit.MD5Ops
 
 /**
-  * Created by ariwaranosai on 16/9/6.
-  *
+  * RequestHeaderBuilder to build request headers.
   */
-
 trait RequestHeaderBuilder extends LeanRequest {
   override def buildRequestHeaders(): RequestHeader = {
     Map[String, String](
@@ -18,6 +16,9 @@ trait RequestHeaderBuilder extends LeanRequest {
 }
 
 
+/**
+  * RequestBuilder with md5.
+  */
 trait SignHeaderBuilder extends RequestHeaderBuilder {
   override def buildRequestHeaders(): RequestHeader = {
     val timestamp: String = (new scalajs.js.Date().getTime() / 1000).toInt.toString

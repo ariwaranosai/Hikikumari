@@ -1,7 +1,8 @@
 package xyz.ariwaranosai.leancloud
+/**
+  * LeanModel provides default model case class for leancloud request.
+  */
 
-
-import cats.data.Xor
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
@@ -12,10 +13,12 @@ import scala.concurrent.Future
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 
-/**
-  * Created by sai on 2016/9/7.
-  */
 package object LeanModel {
+
+  /**
+    * object LeanModelImplicit provides implicit function to
+    * convent result json to class.
+    */
   object LeanModelImplicit {
     implicit def idResponse(s: String): Future[String] = Future {s}
 
