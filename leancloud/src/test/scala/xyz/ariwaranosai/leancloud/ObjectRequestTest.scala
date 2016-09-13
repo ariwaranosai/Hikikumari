@@ -1,6 +1,5 @@
 package xyz.ariwaranosai.leancloud
 
-/*
 import utest._
 import io.circe.generic.auto._
 import io.circe.parser._
@@ -53,4 +52,3 @@ object ObjectRequestTest extends TestSuite {
   }
 
 }
-*/

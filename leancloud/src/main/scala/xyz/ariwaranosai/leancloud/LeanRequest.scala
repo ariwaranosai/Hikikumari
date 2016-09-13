@@ -2,7 +2,7 @@ package xyz.ariwaranosai.leancloud
 
 import cats.data.Xor.{Left, Right}
 import io.circe.parser._
-import org.scalajs.dom.ext.Ajax
+import org.scalajs.dom.ext.{Ajax, AjaxException}
 
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
@@ -42,30 +42,34 @@ abstract class LeanRequest {
     * most of time, this function is provided in this lib. But, user
     * will implement their function to get their own class.
     *
-    * @param data data for request to send
-    * @param f implicit function from result string to expected object
-    * @tparam T type of excepted class
+    * @param data Data for request to send
+    * @param f Implicit function from result string to expected object
+    * @tparam T Type of excepted class
     * @return Future of excepted class
     */
   def run[T](data: String)(implicit f: String => Future[T]) :Future[T] = {
     val nf = (x: XMLHttpRequest) => f(x.responseText)
-    raw[T](data)(nf)
+    raw[T](data)(nf).recoverWith {
+      case LeanJsonParserException(origin, errMsg) =>
+        toLeanInternalException(origin)
+    }
   }
 
   /** Raw is internal function to implement get and run
     * It can also used to implement user-define hook
     *
-    * @param data
-    * @param f
-    * @tparam T
-    * @return
+    * @param data Data send for request to send
+    * @param f Implicit function to convert XMLHttpRequest to T
+    * @tparam T Type of excepted class
+    * @return Future of excepted class
     */
 
   def raw[T](data: String)(implicit f: XMLHttpRequest => Future[T]): Future[T] = {
-     Ajax(method.cmd, requestUrl, data,
+    Ajax(method.cmd, requestUrl, data,
       headers = buildRequestHeaders(),
-      timeout = 0, withCredentials = false, responseType = "")
-       .flatMap(x => f(x))
+      timeout = 0, withCredentials = false, responseType = "").recover {
+      case AjaxException(rep) => rep
+    }.flatMap(x => f(x))
   }
 
   /** Get is another run with implicit decoder.
@@ -73,12 +77,12 @@ abstract class LeanRequest {
     * You can implement your decoder follow Circe lib.
     * @see [[https://travisbrown.github.io/circe/]]
     *
-    * @param data data for request to send.
-    * @param decoder decoder to parser json
-    * @tparam T type of excepted class
+    * @param data Data for request to send.
+    * @param decoder Decoder to parser json
+    * @tparam T Type of excepted class
     * @return Future of excepted class
     */
-  def get[T](data: String)(implicit decoder: Decoder[T]) :Future[T] = {
+  def get[T](data: String = "")(implicit decoder: Decoder[T]) :Future[T] = {
     val nf = (rep: XMLHttpRequest) => Future {
       parse(rep.responseText).flatMap(decoder.decodeJson) match {
         case Right(x) => x

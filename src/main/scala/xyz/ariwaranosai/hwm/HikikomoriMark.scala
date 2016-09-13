@@ -18,7 +18,7 @@ import io.circe.generic.JsonCodec
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
-import xyz.ariwaranosai.leancloud.LeanJsonParserException
+import xyz.ariwaranosai.leancloud.{LeanInternalException, LeanJsonParserException}
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -38,14 +38,17 @@ object HikikomoriMark extends JSApp {
       .run(data)
       .onComplete {
         case Success(x) => println(x.objectId)
-        case Failure(x) => println(x.toString)
+        case Failure(x) => x match {
+          case LeanInternalException(code, errMsg) => println(errMsg)
+          case y => println(y.toString)
+        }
       }
 
-      ObjectGetRequest("kancolle", "57d199c4816dfa00543027f9")
-          .get[kancolle]("").onComplete {
-            case Success(x) => println(x.name)
-            case Failure(x) => println(x.asInstanceOf[LeanJsonParserException].origin)
-          }
+    ObjectGetRequest("kancolle", "12312331").get[kancolle]()
+      .onComplete( {
+        case Success(x) => println(x.id)
+        case Failure(x) => println(x.toString)
+      })
     }>click</button>
     </div>
   }
