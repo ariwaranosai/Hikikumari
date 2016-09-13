@@ -7,6 +7,7 @@ import org.scalajs.dom.ext.Ajax
 import scala.concurrent.Future
 import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import io.circe.{Decoder, Error}
+import org.scalajs.dom.XMLHttpRequest
 import xyz.ariwaranosai.leancloud.Command._
 import xyz.ariwaranosai.leancloud.LeanModel._
 import xyz.ariwaranosai.leancloud.RequestMethod._
@@ -47,10 +48,24 @@ abstract class LeanRequest {
     * @return Future of excepted class
     */
   def run[T](data: String)(implicit f: String => Future[T]) :Future[T] = {
-    Ajax(method.cmd, requestUrl, data,
+    val nf = (x: XMLHttpRequest) => f(x.responseText)
+    raw[T](data)(nf)
+  }
+
+  /** Raw is internal function to implement get and run
+    * It can also used to implement user-define hook
+    *
+    * @param data
+    * @param f
+    * @tparam T
+    * @return
+    */
+
+  def raw[T](data: String)(implicit f: XMLHttpRequest => Future[T]): Future[T] = {
+     Ajax(method.cmd, requestUrl, data,
       headers = buildRequestHeaders(),
       timeout = 0, withCredentials = false, responseType = "")
-        .flatMap(x => f(x.responseText))
+       .flatMap(x => f(x))
   }
 
   /** Get is another run with implicit decoder.
@@ -64,15 +79,13 @@ abstract class LeanRequest {
     * @return Future of excepted class
     */
   def get[T](data: String)(implicit decoder: Decoder[T]) :Future[T] = {
-    Ajax(method.cmd, requestUrl, data,
-      headers = buildRequestHeaders(),
-      timeout = 0, withCredentials = false, responseType = "")
-        .flatMap(rep => Future {
-          parse(rep.responseText).flatMap(decoder.decodeJson) match {
-            case Right(x) => x
-            case Left(x) => throw LeanJsonParserException(rep.responseText, x.toString)
-          }
-        })
+    val nf = (rep: XMLHttpRequest) => Future {
+      parse(rep.responseText).flatMap(decoder.decodeJson) match {
+        case Right(x) => x
+        case Left(x) => throw LeanJsonParserException(rep.responseText, x.toString)
+      }
+    }
+    raw[T](data)(nf)
   }
 }
 

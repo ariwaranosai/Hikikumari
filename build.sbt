@@ -64,8 +64,8 @@ lazy val leancloud = (project in file("leancloud"))
       "xyz.ariwaranosai" %%% "scalajs-hashes" % "0.1.0"
     ),
     jsDependencies ++= Seq(
-      RuntimeDOM,
-      "org.webjars.bower" % "jshashes" % "1.0.5" / "1.0.5/hashes.min.js"
+      RuntimeDOM % "test",
+      "org.webjars.bower" % "jshashes" % "1.0.5" / "1.0.5/hashes.min.js" % "test"
     )
   )
 

@@ -6,7 +6,7 @@ import xyz.ariwaranosai.leancloud.LeanInternalException
   * Error message model.
   */
 
-case class LeanResponse(code: Int, error: String) {
+case class LeanErrorResponse(code: Int, error: String) {
   def isSuccess: Boolean = code > 399
   def throwException: Exception = LeanInternalException(code, error)
 }

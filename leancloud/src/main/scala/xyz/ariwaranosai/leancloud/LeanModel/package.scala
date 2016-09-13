@@ -15,6 +15,14 @@ import scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 package object LeanModel {
 
+  def toLeanInternalException[T](origin: String): Future[T] =
+    Future {
+      decode[LeanErrorResponse](origin) match {
+        case Right(x) => throw LeanInternalException(x.code, x.error)
+        case Left(x) => throw LeanJsonParserException(origin, x.getMessage)
+      }
+    }
+
   /**
     * object LeanModelImplicit provides implicit function to
     * convent result json to class.
@@ -28,6 +36,8 @@ package object LeanModel {
         case Left(x) => throw LeanJsonParserException(s, x.toString)
       }
     }
+
+
 
     implicit def sting2Model[A](input: String)(implicit decoder: Decoder[A]): Future[A] = Future {
       parse(input).flatMap(decoder.decodeJson) match {

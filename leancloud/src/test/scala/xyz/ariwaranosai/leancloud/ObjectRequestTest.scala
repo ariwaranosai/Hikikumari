@@ -1,17 +1,14 @@
 package xyz.ariwaranosai.leancloud
 
+/*
 import utest._
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
 import LeanRequest.{ObjectCreateRequest, ObjectGetRequest}
 import io.circe.generic.JsonCodec
-import xyz.ariwaranosai.leancloud.LeanModel.CreateResponse
 import xyz.ariwaranosai.leancloud.RequestMethod.POST
-
-import scala.concurrent.Future
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
-import scala.concurrent.duration._
 import scala.util.{Failure, Success}
 
 /**
@@ -56,3 +53,4 @@ object ObjectRequestTest extends TestSuite {
   }
 
 }
+*/
