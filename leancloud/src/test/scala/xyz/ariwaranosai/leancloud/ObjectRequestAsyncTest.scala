@@ -22,7 +22,7 @@ object ObjectRequestAsyncTest extends TestSuite {
       (for {
         response <- ObjectCreateRequest("kancolle").run(data)
         kan <- ObjectGetRequest("kancolle", response.objectId).get[kancolle]("")
-        _ <- Future { assert(kan.name == "Murasame")}
+        _ <- Future { assert(kan.results.exists(_.map(_.name).contains("Murasame")))}
       } yield ()).onFailure {
         case x => throw new Exception()
       }

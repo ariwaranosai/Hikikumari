@@ -19,6 +19,7 @@ import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
 import xyz.ariwaranosai.leancloud.{LeanInternalException, LeanJsonParserException}
+import xyz.ariwaranosai.leancloud.LeanModel.LeanResults
 
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
@@ -44,9 +45,9 @@ object HikikomoriMark extends JSApp {
         }
       }
 
-    ObjectGetRequest("kancolle", "12312331").get[kancolle]()
+    ObjectGetRequest("kancolle", "131232131").get[kancolle]()
       .onComplete( {
-        case Success(x) => println(x.id)
+        case Success(x) => if(x.results.nonEmpty) x.results.foreach(println) else println("None")
         case Failure(x) => println(x.toString)
       })
     }>click</button>

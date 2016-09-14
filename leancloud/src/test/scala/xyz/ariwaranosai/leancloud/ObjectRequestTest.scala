@@ -44,7 +44,7 @@ object ObjectRequestTest extends TestSuite {
     'ObjectGetRequestRun {
       ObjectGetRequest("kancolle", "57d199c4816dfa00543027f9")
         .get[kancolle]("").onComplete {
-        case Success(x) => println(x.name)
+        case Success(x) => println(x.results.isEmpty)
         case Failure(x) => println(x.asInstanceOf[LeanJsonParserException].origin)
       }
     }
