@@ -5,7 +5,7 @@
 
 package xyz.ariwaranosai.hwm
 
-import chrome.tabs.bindings.TabQuery
+import chrome.tabs.bindings.{TabCreateProperties, TabQuery}
 import com.thoughtworks.binding.Binding.Var
 import com.thoughtworks.binding._
 import org.scalajs.dom.{Event, document}
@@ -38,7 +38,7 @@ object HikikomoriMark extends JSApp {
   @dom
   def input: Binding[Div] =
     <div>
-      <input oninput={inputHandler} type="text"/>
+      <input oninput={inputHandler} type="text" value={objectId.bind}/>
       <button onclick={
               event: Event =>
                 (for {
@@ -51,9 +51,15 @@ object HikikomoriMark extends JSApp {
               }>
       </button>
       <button onclick={
-              event: Event =>
-                println("world")
-              }>
+              event: Event => {
+                val searchId = objectId.get
+                ObjectGetRequest("chrome", searchId.toString).get[Tabs]().onComplete {
+                  case Success(x) => x.urls.foreach(x => {
+                    chrome.tabs.Tabs.create(TabCreateProperties(url = x))
+                  })
+                  case x => println(x.toString)
+                }
+              }}>
       </button>
     </div>
 

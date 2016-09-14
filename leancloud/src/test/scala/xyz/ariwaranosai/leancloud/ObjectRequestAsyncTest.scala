@@ -4,8 +4,9 @@ import io.circe.generic.JsonCodec
 import utest._
 import xyz.ariwaranosai.leancloud.LeanRequest.{ObjectCreateRequest, ObjectGetRequest}
 import io.circe.syntax._
-import scalajs.concurrent.JSExecutionContext.Implicits.queue
+import xyz.ariwaranosai.leancloud.LeanModel.LeanResults
 
+import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.concurrent.Future
 
 /**
@@ -21,7 +22,7 @@ object ObjectRequestAsyncTest extends TestSuite {
     'ObjectCreateAndGet{
       (for {
         response <- ObjectCreateRequest("kancolle").run(data)
-        kan <- ObjectGetRequest("kancolle", response.objectId).get[kancolle]("")
+        kan <- ObjectGetRequest("kancolle", response.objectId).get[LeanResults[kancolle]]("")
         _ <- Future { assert(kan.results.exists(_.map(_.name).contains("Murasame")))}
       } yield ()).onFailure {
         case x => throw new Exception()
