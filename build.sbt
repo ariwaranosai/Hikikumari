@@ -40,6 +40,9 @@ lazy val root = (project in file("."))
       "net.lullabyte" %%% "scala-js-chrome" % "0.3.0",
       "com.thoughtworks.binding" %%% "dom" % "latest.release"
     ),
+    jsDependencies ++= Seq(
+      "org.webjars.bower" % "jquery" % "1.12.4" / "1.12.4/dist/jquery.min.js"
+    ),
     chromeManifest := new ExtensionManifest {
       val name = Keys.name.value
       val version = Keys.version.value

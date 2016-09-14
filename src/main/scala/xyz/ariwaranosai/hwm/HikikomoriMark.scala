@@ -36,10 +36,13 @@ object HikikomoriMark extends JSApp {
   def inputHandler = { event: Event => objectId := event.currentTarget.asInstanceOf[Input].value }
 
   @dom
-  def input: Binding[Div] =
-    <div>
-      <input oninput={inputHandler} type="text" value={objectId.bind}/>
-      <button onclick={
+  def input: Binding[Input] =
+      <input type="text" oninput={inputHandler} class="text-input" id="token" placeholder="Enter Token" value={objectId.bind} style="width: calc(100% - 20px)"/>
+
+  @dom
+  def buttons: Binding[Div] =
+    <div class="card" data:z="1">
+      <button class="button raised bg-blue-500 color-white" onclick={
               event: Event =>
                 (for {
                   urls <- chrome.tabs.Tabs.query(TabQuery())
@@ -48,9 +51,9 @@ object HikikomoriMark extends JSApp {
                   case Success(x) => objectId := x.objectId
                   case Failure(x) => println("failed")
                 }
-              }>
+              }> Save
       </button>
-      <button onclick={
+      <button class="button raised bg-green-500 color-white" style="margin-left: 25px;" onclick={
               event: Event => {
                 val searchId = objectId.get
                 ObjectGetRequest("chrome", searchId.toString).get[Tabs]().onComplete {
@@ -59,11 +62,23 @@ object HikikomoriMark extends JSApp {
                   })
                   case x => println(x.toString)
                 }
-              }}>
+              }}> Load
       </button>
     </div>
 
+  @dom
+  def mDiv: Binding[Div] =
+    <div class="card-container">
+      <div class="toolbar header bg-blue-500 color-white">
+        <label class="toolbar-label">Hikikumori</label>
+      </div>
+      <div class="card" data:z="1">
+        {input.bind }
+      </div>
+      { buttons.bind }
+    </div>
+
   override def main(): Unit = {
-    dom.render(document.body, input)
+    dom.render(document.body, mDiv)
   }
 }
