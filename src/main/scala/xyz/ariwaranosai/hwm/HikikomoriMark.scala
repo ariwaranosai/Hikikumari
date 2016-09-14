@@ -6,9 +6,10 @@
 package xyz.ariwaranosai.hwm
 
 import chrome.tabs.bindings.TabQuery
+import com.thoughtworks.binding.Binding.Var
 import com.thoughtworks.binding._
 import org.scalajs.dom.{Event, document}
-import org.scalajs.dom.html.{Button, Div}
+import org.scalajs.dom.html.{Button, Div, Input}
 
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js.JSApp
@@ -28,33 +29,35 @@ import scala.util.{Failure, Success}
 
 
 object HikikomoriMark extends JSApp {
-  @JsonCodec case class kancolle(name: String, id: Int)
-  val data = kancolle("haruna", 151).asJson.noSpaces
+  val objectId = Var("")
+
+  @JsonCodec case class Tabs(urls: List[String])
+
+  def inputHandler = { event: Event => objectId := event.currentTarget.asInstanceOf[Input].value }
 
   @dom
-  def clickButton: Binding[Div] = {
+  def input: Binding[Div] =
     <div>
-    <button onclick={event: Event =>
-    ObjectCreateRequest("kancolle")
-      .run(data)
-      .onComplete {
-        case Success(x) => println(x.objectId)
-        case Failure(x) => x match {
-          case LeanInternalException(code, errMsg) => println(errMsg)
-          case y => println(y.toString)
-        }
-      }
-
-    ObjectGetRequest("kancolle", "131232131").get[kancolle]()
-      .onComplete( {
-        case Success(x) => if(x.results.nonEmpty) x.results.foreach(println) else println("None")
-        case Failure(x) => println(x.toString)
-      })
-    }>click</button>
+      <input oninput={inputHandler} type="text"/>
+      <button onclick={
+              event: Event =>
+                (for {
+                  urls <- chrome.tabs.Tabs.query(TabQuery())
+                  response <- ObjectCreateRequest("chrome").run(Tabs(urls.map(_.url.toString).toList).asJson.noSpaces)
+                } yield response).onComplete {
+                  case Success(x) => objectId := x.objectId
+                  case Failure(x) => println("failed")
+                }
+              }>
+      </button>
+      <button onclick={
+              event: Event =>
+                println("world")
+              }>
+      </button>
     </div>
-  }
 
   override def main(): Unit = {
-    dom.render(document.body, clickButton)
+    dom.render(document.body, input)
   }
 }
