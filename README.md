@@ -5,8 +5,16 @@ Hikikumari is a chrome-extension with a leancloud REST api lib in scalajs in bui
 
 I'm working on
 
+for leancloud
+
 - [ ] Object operations
 - [ ] Query
 - [ ] User
 - [ ] Files
 - [ ] Role
+
+for chrome extension
+
+- [ ] save and load tabs
+- [ ] add user support
+- [ ] edit saved tabs
