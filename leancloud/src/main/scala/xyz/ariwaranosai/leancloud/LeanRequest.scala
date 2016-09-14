@@ -82,14 +82,14 @@ abstract class LeanRequest {
     * @tparam T Type of excepted class
     * @return Future of Results which contains list of excepted class
     */
-  def get[T](data: String = "")(implicit decoder: Decoder[LeanResults[T]]) :Future[LeanResults[T]] = {
+  def get[T](data: String = "")(implicit decoder: Decoder[T]) :Future[T] = {
     val nf = (rep: XMLHttpRequest) => Future {
       parse(rep.responseText).flatMap(decoder.decodeJson) match {
         case Right(x) => x
         case Left(x) => throw LeanJsonParserException(rep.responseText, x.toString)
       }
     }
-    raw[LeanResults[T]](data)(nf)
+    raw[T](data)(nf)
   }
 }
 

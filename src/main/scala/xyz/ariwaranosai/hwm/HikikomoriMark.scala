@@ -5,10 +5,13 @@
 
 package xyz.ariwaranosai.hwm
 
-import chrome.tabs.bindings.TabQuery
+import chrome.notifications.Notifications
+import chrome.notifications.bindings.NotificationOptions
+import chrome.tabs.bindings.{TabCreateProperties, TabQuery}
+import com.thoughtworks.binding.Binding.Var
 import com.thoughtworks.binding._
 import org.scalajs.dom.{Event, document}
-import org.scalajs.dom.html.{Button, Div}
+import org.scalajs.dom.html.{Button, Div, Input}
 
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js.JSApp
@@ -28,33 +31,59 @@ import scala.util.{Failure, Success}
 
 
 object HikikomoriMark extends JSApp {
-  @JsonCodec case class kancolle(name: String, id: Int)
-  val data = kancolle("haruna", 151).asJson.noSpaces
+  val objectId = Var("")
+
+  @JsonCodec case class Tabs(urls: Option[List[String]])
+
+  def inputHandler = { event: Event => objectId := event.currentTarget.asInstanceOf[Input].value }
 
   @dom
-  def clickButton: Binding[Div] = {
-    <div>
-    <button onclick={event: Event =>
-    ObjectCreateRequest("kancolle")
-      .run(data)
-      .onComplete {
-        case Success(x) => println(x.objectId)
-        case Failure(x) => x match {
-          case LeanInternalException(code, errMsg) => println(errMsg)
-          case y => println(y.toString)
-        }
-      }
+  def input: Binding[Input] =
+      <input type="text" oninput={inputHandler} class="text-input" id="token" placeholder="Enter Token" value={objectId.bind} style="width: calc(100% - 20px)"/>
 
-    ObjectGetRequest("kancolle", "131232131").get[kancolle]()
-      .onComplete( {
-        case Success(x) => if(x.results.nonEmpty) x.results.foreach(println) else println("None")
-        case Failure(x) => println(x.toString)
-      })
-    }>click</button>
+  @dom
+  def buttons: Binding[Div] =
+    <div class="card" data:z="1">
+      <button class="button raised bg-blue-500 color-white" onclick={
+              event: Event =>
+                (for {
+                  urls <- chrome.tabs.Tabs.query(TabQuery())
+                  response <- ObjectCreateRequest("chrome").run(Tabs(Some(urls.map(_.url.toString).toList)).asJson.noSpaces)
+                } yield response).onComplete {
+                  case Success(x) => objectId := x.objectId
+                  case Failure(x) => println("failed")
+                }
+              }> Save
+      </button>
+      <button class="button raised bg-green-500 color-white" style="margin-left: 25px;" onclick={
+              event: Event => {
+                val searchId = objectId.get
+                ObjectGetRequest("chrome", searchId.toString).get[Tabs]().onComplete {
+                  case Success(x) => x.urls match {
+                    case Some(urls) => urls.foreach(url =>chrome.tabs.Tabs.create(TabCreateProperties(url = url)))
+                    case None => {
+                      objectId := "Error Token"
+                    }
+                  }
+                  case Failure(x) => println(x.toString)
+                }
+              }}> Load
+      </button>
     </div>
-  }
+
+  @dom
+  def mDiv: Binding[Div] =
+    <div class="card-container">
+      <div class="toolbar header bg-blue-500 color-white">
+        <label class="toolbar-label">Hikikumori</label>
+      </div>
+      <div class="card" data:z="1">
+        {input.bind }
+      </div>
+      { buttons.bind }
+    </div>
 
   override def main(): Unit = {
-    dom.render(document.body, clickButton)
+    dom.render(document.body, mDiv)
   }
 }
