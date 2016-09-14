@@ -5,6 +5,8 @@
 
 package xyz.ariwaranosai.hwm
 
+import chrome.notifications.Notifications
+import chrome.notifications.bindings.NotificationOptions
 import chrome.tabs.bindings.{TabCreateProperties, TabQuery}
 import com.thoughtworks.binding.Binding.Var
 import com.thoughtworks.binding._
@@ -31,7 +33,7 @@ import scala.util.{Failure, Success}
 object HikikomoriMark extends JSApp {
   val objectId = Var("")
 
-  @JsonCodec case class Tabs(urls: List[String])
+  @JsonCodec case class Tabs(urls: Option[List[String]])
 
   def inputHandler = { event: Event => objectId := event.currentTarget.asInstanceOf[Input].value }
 
@@ -46,7 +48,7 @@ object HikikomoriMark extends JSApp {
               event: Event =>
                 (for {
                   urls <- chrome.tabs.Tabs.query(TabQuery())
-                  response <- ObjectCreateRequest("chrome").run(Tabs(urls.map(_.url.toString).toList).asJson.noSpaces)
+                  response <- ObjectCreateRequest("chrome").run(Tabs(Some(urls.map(_.url.toString).toList)).asJson.noSpaces)
                 } yield response).onComplete {
                   case Success(x) => objectId := x.objectId
                   case Failure(x) => println("failed")
@@ -57,10 +59,13 @@ object HikikomoriMark extends JSApp {
               event: Event => {
                 val searchId = objectId.get
                 ObjectGetRequest("chrome", searchId.toString).get[Tabs]().onComplete {
-                  case Success(x) => x.urls.foreach(x => {
-                    chrome.tabs.Tabs.create(TabCreateProperties(url = x))
-                  })
-                  case x => println(x.toString)
+                  case Success(x) => x.urls match {
+                    case Some(urls) => urls.foreach(url =>chrome.tabs.Tabs.create(TabCreateProperties(url = url)))
+                    case None => {
+                      objectId := "Error Token"
+                    }
+                  }
+                  case Failure(x) => println(x.toString)
                 }
               }}> Load
       </button>
