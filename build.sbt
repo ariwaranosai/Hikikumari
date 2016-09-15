@@ -53,7 +53,7 @@ lazy val root = (project in file("."))
         API.Tabs
       )
       override val browserAction = Some(BrowserAction(
-        title = Some("Save"),
+        title = Some("Hirikumori"),
         popup = Some("assets/html/App.html")
       ))
     }
