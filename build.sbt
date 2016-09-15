@@ -28,7 +28,9 @@ lazy val commonSettings = Seq (
     "io.circe" %%% "circe-parser" % circeVersion
   ),
   testFrameworks += new TestFramework("utest.runner.Framework"),
-  relativeSourceMaps := true
+  relativeSourceMaps := true ,
+  scalaJSUseRhino in Global := false,
+  jsEnv := PhantomJSEnv(args = Seq("--web-security=no", "")).value
 )
 
 lazy val root = (project in file("."))
