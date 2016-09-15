@@ -30,14 +30,18 @@ package object LeanModel {
   object LeanModelImplicit {
     implicit def idResponse(s: String): Future[String] = Future {s}
 
-    implicit def createResponse(s: String): Future[CreateResponse] = Future {
-      decode[CreateResponse](s) match {
+    implicit def createModel[T](s: String)(implicit decoder: Decoder[T]): Future[T] = Future {
+      decode[T](s) match {
         case Right(x) => x
         case Left(x) => throw LeanJsonParserException(s, x.toString)
       }
     }
 
+    implicit def createResponse(s: String): Future[CreateResponse] =
+      createModel[CreateResponse](s)
 
+    implicit def updateResponse(s: String): Future[UpdateResponse] =
+      createModel[UpdateResponse](s)
 
     implicit def sting2Model[A](input: String)(implicit decoder: Decoder[A]): Future[A] = Future {
       parse(input).flatMap(decoder.decodeJson) match {

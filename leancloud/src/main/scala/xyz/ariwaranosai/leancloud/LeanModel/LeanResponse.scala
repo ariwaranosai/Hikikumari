@@ -1,5 +1,6 @@
 package xyz.ariwaranosai.leancloud.LeanModel
 
+import io.circe.generic.JsonCodec
 import xyz.ariwaranosai.leancloud.LeanInternalException
 
 /**
@@ -11,4 +12,6 @@ case class LeanErrorResponse(code: Int, error: String) {
   def throwException: Exception = LeanInternalException(code, error)
 }
 
-case class CreateResponse(createdAt: String, objectId: String)
+@JsonCodec case class CreateResponse(createdAt: String, objectId: String)
+
+@JsonCodec case class UpdateResponse(updatedAt: String)

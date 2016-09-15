@@ -2,12 +2,12 @@ package xyz.ariwaranosai.leancloud
 
 import io.circe.generic.JsonCodec
 import utest._
-import xyz.ariwaranosai.leancloud.LeanRequest.{ObjectCreateRequest, ObjectGetRequest}
+import xyz.ariwaranosai.leancloud.LeanRequest.{ObjectCreateRequest, ObjectGetRequest, ObjectUpdateRequest}
 import io.circe.syntax._
-import xyz.ariwaranosai.leancloud.LeanModel.LeanResults
 
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
 
 /**
   * Created by ariwaranosai on 16/9/13.
@@ -15,19 +15,28 @@ import scala.concurrent.Future
   */
 
 object ObjectRequestAsyncTest extends TestSuite {
-  @JsonCodec case class kancolle(name: String, id: Int)
-  val data = kancolle("Murasame", 81).asJson.noSpaces
+  @JsonCodec case class kancolle(name: String, kid: String)
+  val data = kancolle("Murasame", 81.toString)
 
   val tests = this {
-    'ObjectCreateAndGet{
-      (for {
-        response <- ObjectCreateRequest("kancolle").run(data)
-        kan <- ObjectGetRequest("kancolle", response.objectId).get[LeanResults[kancolle]]("")
-        _ <- Future { assert(kan.results.exists(_.map(_.name).contains("Murasame")))}
-      } yield ()).onFailure {
-        case x => throw new Exception()
-      }
+    'ObjectCreateAndGet - {
+      for {
+        response <- ObjectCreateRequest("kancolle").run(data.asJson.noSpaces)
+        kan <- ObjectGetRequest("kancolle", response.objectId).get[kancolle]("")
+        _ <- Future {
+          assert(kan.name == "Murasame")
+        }
+        _ <- {
+          val newData = kancolle("Murasameka", "81b")
+          ObjectUpdateRequest("kancolle", response.objectId)
+            .run(newData.asJson.noSpaces)
+        }
+        nkan <- ObjectGetRequest("kancolle", response.objectId).get[kancolle]("")
+        _ <- Future {
+          assert(nkan.name == "Murasameka")
+        }
+
+      } yield ()
     }
   }
-
 }

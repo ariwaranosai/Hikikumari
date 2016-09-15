@@ -4,9 +4,10 @@ import utest._
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
-import LeanRequest.{ObjectCreateRequest, ObjectGetRequest}
+import LeanRequest.{ObjectCreateRequest, ObjectGetRequest, ObjectUpdateRequest}
 import io.circe.generic.JsonCodec
-import xyz.ariwaranosai.leancloud.RequestMethod.POST
+import xyz.ariwaranosai.leancloud.RequestMethod.{GET, POST, PUT}
+
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.util.{Failure, Success}
 
@@ -16,9 +17,6 @@ import scala.util.{Failure, Success}
 
 object ObjectRequestTest extends TestSuite {
 
-  @JsonCodec case class kancolle(name: String, id: Int)
-
-  val data = kancolle("Murasame", 81).asJson.noSpaces
 
   val tests = this {
 
@@ -28,25 +26,16 @@ object ObjectRequestTest extends TestSuite {
       assert(request.requestUrl == "https://api.leancloud.cn/1.1/classes/kancolle")
     }
 
-    'ObjectCreateRun {
-      ObjectCreateRequest("kancolle").run(data)
-        .onComplete {
-          case Success(x) => println(x.objectId)
-          case Failure(x) => println(x.toString)
-        }
-    }
-
     'ObjectGetRequestUrl {
       val request = ObjectGetRequest("kancolle", "57d199c4816dfa00543027f9")
+      assert(request.method == GET)
       assert(request.requestUrl == "https://api.leancloud.cn/1.1/classes/kancolle/57d199c4816dfa00543027f9")
     }
 
-    'ObjectGetRequestRun {
-      ObjectGetRequest("kancolle", "57d199c4816dfa00543027f9")
-        .get[kancolle]("").onComplete {
-        case Success(x) => println(x.name)
-        case Failure(x) => println(x.asInstanceOf[LeanJsonParserException].origin)
-      }
+    'ObjectUpdateRequestUrl {
+      val request = ObjectUpdateRequest("kancolle", "57dad190128fe10064b8bd16")
+      assert(request.method == PUT)
+      assert(request.requestUrl == "https://api.leancloud.cn/1.1/classes/kancolle/57dad190128fe10064b8bd16")
     }
 
   }

@@ -105,7 +105,8 @@ object LeanRequest {
     extends DataChangeCommand[CreateResponse](className, "")
       with ObjectRequest with RequestHeaderBuilder {
     override val method: Method = POST
-    override implicit def string2T(s: String): Future[CreateResponse] = createResponse(s)
+    override implicit def string2T(s: String): Future[CreateResponse] =
+      createModel[CreateResponse](s)
   }
 
   object ObjectCreateRequest {
@@ -120,5 +121,18 @@ object LeanRequest {
 
   object ObjectGetRequest {
     def apply(className: String, objectId: String): ObjectGetRequest = new ObjectGetRequest(className, objectId)
+  }
+
+  class ObjectUpdateRequest(className: String, objectId: String)
+    extends DataChangeCommand[UpdateResponse](className, objectId)
+      with ObjectRequest with RequestHeaderBuilder {
+    override val method: Method = PUT
+
+    override implicit def string2T(s: String): Future[UpdateResponse] =
+      createModel[UpdateResponse](s)
+  }
+
+  object ObjectUpdateRequest {
+    def apply(className: String, objectId: String): ObjectUpdateRequest = new ObjectUpdateRequest(className, objectId)
   }
 }
