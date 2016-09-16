@@ -7,3 +7,5 @@ import io.circe.generic.JsonCodec
   */
 
 @JsonCodec case class LeanResults[T](results: Option[List[T]])
+
+@JsonCodec case class NoneResult()

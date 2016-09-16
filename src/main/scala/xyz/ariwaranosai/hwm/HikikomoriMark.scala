@@ -15,7 +15,7 @@ import org.scalajs.dom.html.{Button, Div, Input}
 
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js.JSApp
-import xyz.ariwaranosai.leancloud.LeanRequest.{ObjectCreateRequest, ObjectGetRequest}
+import xyz.ariwaranosai.leancloud.LeanRequest.{ObjectCreateRequest, ObjectDeleteRequest, ObjectGetRequest}
 import io.circe._
 import io.circe.generic.JsonCodec
 import io.circe.generic.auto._

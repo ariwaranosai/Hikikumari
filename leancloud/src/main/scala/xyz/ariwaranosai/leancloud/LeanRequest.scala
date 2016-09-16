@@ -99,6 +99,7 @@ trait TrivalRequest extends LeanRequest {
 }
 
 
+// todo split leanrequest obj and class
 object LeanRequest {
 
   class ObjectCreateRequest(className: String)
@@ -134,5 +135,18 @@ object LeanRequest {
 
   object ObjectUpdateRequest {
     def apply(className: String, objectId: String): ObjectUpdateRequest = new ObjectUpdateRequest(className, objectId)
+  }
+
+  class ObjectDeleteRequest(className: String, objectId: String)
+    extends DataChangeCommand[NoneResult](className, objectId)
+      with ObjectRequest with RequestHeaderBuilder {
+    override val method: Method = DELETE
+
+    override implicit def string2T(s: String): Future[NoneResult] =
+      createModel[NoneResult](s)
+  }
+
+  object ObjectDeleteRequest {
+    def apply(className: String, objectId: String): ObjectDeleteRequest = new ObjectDeleteRequest(className, objectId)
   }
 }

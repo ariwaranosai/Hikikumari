@@ -40,6 +40,9 @@ package object LeanModel {
     implicit def createResponse(s: String): Future[CreateResponse] =
       createModel[CreateResponse](s)
 
+    implicit def NoneResponse(s: String): Future[NoneResult] =
+      createModel[NoneResult](s)
+
     implicit def updateResponse(s: String): Future[UpdateResponse] =
       createModel[UpdateResponse](s)
 
