@@ -29,6 +29,7 @@ abstract class LeanRequest {
     s"$API_URL/${API_VERSION.toString}/$cclass/$command".stripSuffix("/")
   }
 
+  // follower will be needed when you create new request
   def command: String = ""
   def cclass: String = ""
 
@@ -148,5 +149,9 @@ object LeanRequest {
 
   object ObjectDeleteRequest {
     def apply(className: String, objectId: String): ObjectDeleteRequest = new ObjectDeleteRequest(className, objectId)
+  }
+
+  object ObjectcloudQuery extends TrivalCommand with ObjectRequest with RequestHeaderBuilder {
+    override val method = GET
   }
 }
