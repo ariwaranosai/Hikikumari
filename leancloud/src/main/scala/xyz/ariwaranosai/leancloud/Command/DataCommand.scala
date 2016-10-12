@@ -15,7 +15,8 @@ abstract class DataCommand(name: String, data: String) extends LeanRequest {
     *
     * @return the url of rpc command
     */
-  override def command: String = if(data.isEmpty) s"$name/" else s"$name/$data"
+  override def command: String = if(name.isEmpty) ""
+    else if(data.isEmpty) s"$name/" else s"$name/$data"
 }
 
 

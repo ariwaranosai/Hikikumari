@@ -10,3 +10,7 @@ import xyz.ariwaranosai.leancloud.LeanRequest
 trait ObjectRequest extends LeanRequest {
   override val cclass: String = "classes"
 }
+
+trait UserRequest extends LeanRequest {
+  override val cclass: String = "users"
+}
