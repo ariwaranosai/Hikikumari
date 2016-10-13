@@ -21,7 +21,7 @@ object UserRequestTest extends TestSuite {
 
   val tests = this {
     'UserCreateRequestUrl {
-      val request = UserCreateRequest
+      val request = UserCreateRequest()
       assert(request.requestUrl  == "https://api.leancloud.cn/1.1/users")
     }
   }

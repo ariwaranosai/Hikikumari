@@ -14,6 +14,8 @@ package object leancloud {
   type Url = String
   type Method = RequestMethod
   type RequestHeader = Map[String, String]
+
+  type Password = String
 }
 
 
