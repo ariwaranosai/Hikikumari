@@ -40,7 +40,7 @@ lazy val root = (project in file("."))
   .settings(
     libraryDependencies ++= Seq(
       "net.lullabyte" %%% "scala-js-chrome" % "0.3.0",
-      "com.thoughtworks.binding" %%% "dom" % "latest.release"
+      "com.thoughtworks.binding" %%% "dom" % "10.0.0-M5"
     ),
     jsDependencies ++= Seq(
       "org.webjars.bower" % "jquery" % "1.12.4" / "1.12.4/dist/jquery.min.js"
