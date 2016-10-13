@@ -7,14 +7,14 @@ I'm working on
 
 for leancloud
 
-- [ ] Object operations
-- [ ] Query
+- [x] Object operations
 - [ ] User
+- [ ] Query
 - [ ] Files
 - [ ] Role
 
 for chrome extension
 
-- [ ] save and load tabs
+- [x] save and load tabs
 - [ ] add user support
 - [ ] edit saved tabs
