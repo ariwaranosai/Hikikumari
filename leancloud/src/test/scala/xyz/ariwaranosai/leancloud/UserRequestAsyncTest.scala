@@ -2,6 +2,7 @@ package xyz.ariwaranosai.leancloud
 
 import xyz.ariwaranosai.leancloud.LeanCloudUser.UserCreateRequest
 import scalajs.concurrent.JSExecutionContext.Implicits.queue
+import scala.util.Random
 import utest._
 
 import scala.concurrent.Future
@@ -11,7 +12,7 @@ import scala.concurrent.Future
   */
 
 object UserRequestAsyncTest extends TestSuite {
-  val name = "Amatsukaze"
+  val name = "Amatsukaze" + Random.nextDouble().toString
   val password = "Yui Ogura"
   val tests = this {
     'UserCreateRequest - {
